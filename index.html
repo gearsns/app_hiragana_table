@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta charset="UTF-8">
+<title>ひらがなひょう</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .card {
+        position: relative;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        transform: translate3d(0, 0, 0);
+    }
+    
+    .card>div {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        line-height: 140%;
+        aspect-ratio: 1 / 1;
+        border-radius: 10%;
+        text-align: center;
+        vertical-align: middle;
+        overflow: hidden;
+        backface-visibility: hidden;
+        writing-mode: horizontal-tb;
+    }
+    
+    .character {
+        font-size: 15vh;
+        background-color: rgb(242, 243, 211);
+    }
+    
+    .card[data-picture=false] .character {
+        animation: anime2 1s;
+        transform: rotateX(0deg);
+    }
+    
+    .card[data-picture=true] .character {
+        animation: anime1 1s;
+        transform: rotateX(180deg);
+    }
+    
+    .picture {
+        font-size: 14vh;
+        background-color: rgb(111, 207, 252);
+    }
+    
+    .picture[data-character]::before {
+        content: attr(data-character);
+        top: 1vh;
+        right: 1vh;
+        text-align: center;
+        vertical-align: middle;
+        position: absolute;
+        border: 1px single black;
+        border-radius: 5vh;
+        width: 5vh;
+        height: 5vh;
+        font-size: 4vh;
+        line-height: 5vh;
+        overflow: visible;
+        writing-mode: horizontal-tb;
+        background-color: rgba(255, 255, 255, 0.74);
+    }
+    
+    .picture[data-string]::after {
+        content: attr(data-string);
+        bottom: 1vh;
+        left: 1vh;
+        text-align: left;
+        vertical-align: middle;
+        position: absolute;
+        width: 100%;
+        height: 2vh;
+        padding: 0;
+        font-size: 2vh;
+        line-height: 2vh;
+        overflow: visible;
+        writing-mode: horizontal-tb;
+    }
+    
+    .card[data-picture=false] .picture {
+        animation: anime1 1s;
+        transform: rotateX(180deg);
+    }
+    
+    .card[data-picture=true] .picture {
+        animation: anime2 1s;
+        transform: rotateX(0deg);
+    }
+    
+    @keyframes anime1 {
+        0% {
+            transform: perspective(500px) rotateX(0deg) translateZ(1px);
+        }
+        100% {
+            transform: perspective(500px) rotateX(180deg) translateZ(0px);
+        }
+    }
+    
+    @keyframes anime2 {
+        0% {
+            transform: perspective(500px) rotateX(180deg) translateZ(0px);
+        }
+        100% {
+            transform: perspective(500px) rotateX(360deg) translateZ(1px);
+        }
+    }
+    
+    table {
+        position: relative;
+        height: 100%;
+    }
+    
+    #main {
+        width: 100%;
+        height: 100%;
+        overflow-x: scroll;
+        -ms-writing-mode: tb-rl;
+        writing-mode: vertical-rl;
+    }
+    
+    tr:nth-child(1) .picture {
+        background-color: #f25648;
+    }
+    
+    tr:nth-child(6) .picture {
+        background-color: #f25648;
+    }
+    
+    tr:nth-child(2) .picture {
+        background-color: #00a0e6;
+    }
+    
+    tr:nth-child(7) .picture {
+        background-color: #00a0e6;
+    }
+    
+    tr:nth-child(3) .picture {
+        background-color: #00caff;
+    }
+    
+    tr:nth-child(8) .picture {
+        background-color: #00caff;
+    }
+    
+    tr:nth-child(4) .picture {
+        background-color: #f19a2a;
+    }
+    
+    tr:nth-child(9) .picture {
+        background-color: #f19a2a;
+    }
+    
+    tr:nth-child(5) .picture {
+        background-color: #f2b635;
+    }
+    
+    tr:nth-child(10) .picture {
+        background-color: #f2b635;
+    }
+</style>
+<div id="main">
+    <table id="aiueo">
+    </table>
+</div>
+<script>
+    const data = [
+        [{
+            c: "あ",
+            p: "🦆",
+            s: "あひる"
+        }, {
+            c: "い",
+            p: "🐶",
+            s: "いぬ"
+        }, {
+            c: "う",
+            p: "🐰",
+            s: "うさぎ"
+        }, {
+            c: "え",
+            p: "🦐",
+            s: "えび"
+        }, {
+            c: "お",
+            p: "🦜",
+            s: "おうむ"
+        }],
+        [{
+            c: "か",
+            p: "🐢",
+            s: "かめ"
+        }, {
+            c: "き",
+            p: "🦊",
+            s: "きつね"
+        }, {
+            c: "く",
+            p: "🐻",
+            s: "くま"
+        }, {
+            c: "け",
+            p: "🧶",
+            s: "けいと"
+        }, {
+            c: "こ",
+            p: "🦇",
+            s: "こうもり"
+        }],
+        [{
+            c: "さ",
+            p: "🐵",
+            s: "さる"
+        }, {
+            c: "し",
+            p: "🦓",
+            s: "しまうま"
+        }, {
+            c: "す",
+            p: "🍉",
+            s: "すいか"
+        }, {
+            c: "せ",
+            p: "🍘",
+            s: "せんべい"
+        }, {
+            c: "そ",
+            p: "🐘",
+            s: "ぞう"
+        }],
+        [{
+            c: "た",
+            p: "🐙",
+            s: "たこ"
+        }, {
+            c: "ち",
+            p: "🌷",
+            s: "ちゅーりっぷ"
+        }, {
+            c: "つ",
+            p: "🌙",
+            s: "つき"
+        }, {
+            c: "て",
+            p: "🐞",
+            s: "てんとうむし"
+        }, {
+            c: "と",
+            p: "🐯",
+            s: "とら"
+        }],
+        [{
+            c: "な",
+            p: "🍆",
+            s: "なす"
+        }, {
+            c: "に",
+            p: "🐔",
+            s: "にわとり"
+        }, {
+            c: "ぬ",
+            p: "🧸",
+            s: "ぬいぐるみ"
+        }, {
+            c: "ね",
+            p: "🐱",
+            s: "ねこ"
+        }, {
+            c: "の",
+            p: "🪚",
+            s: "のこぎり"
+        }],
+        [{
+            c: "は",
+            p: "🐼",
+            s: "ぱんだ"
+        }, {
+            c: "ひ",
+            p: "🐤",
+            s: "ひよこ"
+        }, {
+            c: "ふ",
+            p: "🐷",
+            s: "ぶた"
+        }, {
+            c: "へ",
+            p: "🐧",
+            s: "ぺんぎん"
+        }, {
+            c: "ほ",
+            p: "🧹",
+            s: "ほうき"
+        }],
+        [{
+            c: "ま",
+            p: "🦣",
+            s: "まんもす"
+        }, {
+            c: "み",
+            p: "🍊",
+            s: "みかん"
+        }, {
+            c: "む",
+            p: "🔎",
+            s: "むしめがね"
+        }, {
+            c: "め",
+            p: "👓",
+            s: "めがね"
+        }, {
+            c: "も",
+            p: "🍑",
+            s: "もも"
+        }],
+        [{
+            c: "や",
+            p: "🌴",
+            s: "やしのき"
+        }, {
+            c: "",
+            p: "",
+            s: ""
+        }, {
+            c: "ゆ",
+            p: "⛄",
+            s: "ゆきだるま"
+        }, {
+            c: "",
+            p: "",
+            s: ""
+        }, {
+            c: "よ",
+            p: "⛵",
+            s: "よっと"
+        }],
+        [{
+            c: "ら",
+            p: "🦁",
+            s: "らいおん"
+        }, {
+            c: "り",
+            p: "🦒",
+            s: "きりん"
+        }, {
+            c: "る",
+            p: "🚗",
+            s: "くるま"
+        }, {
+            c: "れ",
+            p: "🍋",
+            s: "れもん"
+        }, {
+            c: "ろ",
+            p: "🚀",
+            s: "ろけっと"
+        }],
+        [{
+            c: "わ",
+            p: "🐊",
+            s: "わに"
+        }, {
+            c: "",
+            p: "",
+            s: ""
+        }, {
+            c: "を",
+            p: "🎨",
+            s: "えをかく"
+        }, {
+            c: "",
+            p: "",
+            s: ""
+        }, {
+            c: "ん",
+            p: "🍞",
+            s: "ぱん"
+        }]
+    ];
+
+    const tbl_aiueo = document.getElementById("aiueo");
+    for (const l of data) {
+        const r = document.createElement("tr");
+        for (const item of l) {
+            const cell = document.createElement("td");
+            if (item.c.length > 0) {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.addEventListener("click", e => turn(card));
+                const c = document.createElement("div");
+                c.className = "character";
+                c.textContent = item.c;
+                const p = document.createElement("div");
+                p.className = "picture";
+                p.textContent = item.p;
+                p.setAttribute("data-character", item.c);
+                p.setAttribute("data-string", item.s);
+                card.setAttribute("data-character", item.c);
+                card.appendChild(c);
+                card.appendChild(p);
+                cell.appendChild(card);
+            }
+            r.appendChild(cell);
+        }
+        tbl_aiueo.appendChild(r);
+    }
+    const audio_ctx = new AudioContext();
+    let audio_buffer_list = {};
+    (async() => {
+        for (const l of data) {
+            for (const item of l) {
+                if (item.c.length > 0) {
+                    audio_buffer_list[item.c] = await fetch(`sound/${encodeURI(item.c)}.mp3`)
+                        .then(response => response.arrayBuffer())
+                        .then(response_buffer => audio_ctx.decodeAudioData(response_buffer))
+                        .catch(error => null);
+                }
+            }
+        }
+    })();
+    const turn = e => {
+        if (e.getAttribute('data-picture') == "false") {
+            e.setAttribute('data-picture', "true");
+        } else {
+            e.setAttribute('data-picture', "false");
+            const c = e.getAttribute("data-character");
+            if (audio_buffer_list[c]) {
+                const audio = audio_ctx.createBufferSource();
+                audio.buffer = audio_buffer_list[c];
+                audio.connect(audio_ctx.destination);
+                audio.start(0);
+            }
+        }
+    };
+</script>
